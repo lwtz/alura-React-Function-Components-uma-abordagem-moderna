@@ -1,26 +1,45 @@
-import React from "react";
+import React                                           from 'react'
+import { Button, TextField, Switch, FormControlLabel } from '@material-ui/core'
+
+// import TextField  from '@material-ui/core/TextField'
+
 
 function RegistrationForm() {
     return (
         <form>
-            <label>Name</label>
-            <input type="text" />
+            <TextField id="name" label="Name" variant="outlined" autoFocus={ true } fullWidth margin={ 'normal' } />
+            <TextField id="lastname" label="LastName" variant="outlined" fullWidth margin={ 'normal' } />
+            <TextField id="cpf" label="CPF" variant="outlined" fullWidth margin={ 'normal' } />
 
-            <label>LastName</label>
-            <input type="text" />
+            <FormControlLabel
+                control={
+                    <Switch
+                        name="Promotions"
+                        color="primary"
+                        defaultChecked={ true }
+                    />
+                }
+                label="Promotions"
+            />
 
 
-            <label>CPF</label>
-            <input type="number" />
+            <FormControlLabel
+                control={
+                    <Switch
+                        name="News"
+                        color="primary"
+                        defaultChecked={ true }
+                    />
+                }
+                label="News"
+            />
 
 
-            <label>Promotions</label>
-            <input type="checkbox" />
-
-            <label>News</label>
-            <input type="checkbox" />
-
-            <button type={ "submit" }> Register</button>
+            <Button
+                type={ 'submit' }
+                variant="contained"
+                color="primary"
+            > Register </Button>
         </form>
     )
 }
