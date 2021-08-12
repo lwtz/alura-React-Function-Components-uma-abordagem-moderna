@@ -1,103 +1,47 @@
-import React, { useState }                             from 'react'
-import { Button, TextField, Switch, FormControlLabel } from '@material-ui/core'
+import React, { useEffect, useState }           from 'react'
+import PersonalData                             from './PersonalData'
+import UserData                                 from './UserData'
+import DeliveryData                             from './DeliveryData'
+import { Step, StepLabel, Stepper, Typography } from '@material-ui/core'
 
 
-function RegistrationForm({toSend, validarCPF}){
-    const [ name, setName ] = useState('')
-    const [ lastname, setLastName ] = useState('')
-    const [ cpf, setCPF ] = useState('')
-    const [ promotions, setPromotions ] = useState(true)
-    const [ news, setNews ] = useState(true)
-    const [ error, setError ] = useState({cpf: {valid: true, text: ''}})
+function RegistrationForm({toSend}){
+    const [ CurrentStage, setCurrentStage ] = useState(0)
+    const [ dataCollected, setData ] = useState({})
+    useEffect(() => {
+        if( CurrentStage === forms.length - 1 ){
+            toSend(dataCollected)
+        }
+    })
+
+    const forms = [
+        <UserData toSend={ collectData } />,
+        <PersonalData toSend={ collectData } />,
+        <DeliveryData toSend={ collectData } />,
+        <Typography variant={ 'h5' }> Vlw </Typography>
+    ]
+
+    function collectData(data){
+        setData({...dataCollected, ...data})
+        nextStage()
+    }
+
+
+    function nextStage(){
+        setCurrentStage(CurrentStage + 1)
+    }
+
 
     return (
-        <form onSubmit={ (event) => {
-            event.preventDefault()
-            toSend({name, lastname, cpf, promotions, news})
-        }
-        }>
-            <TextField
-                value={ name }
-                onChange={ (event) => {
-                    setName(event.target.value)
-                } }
-                id="name"
-                label="Name"
-                variant="outlined"
-                autoFocus={ true }
-                fullWidth
-                margin={ 'normal' }
-            />
-            <TextField
-                value={ lastname }
-                onChange={ (event) => {
-                    setLastName(event.target.value)
-                } }
-                id="lastname"
-                label="LastName"
-                variant="outlined"
-                fullWidth
-                margin={ 'normal' }
-            />
-            <TextField
-                value={ cpf }
-                inputProps={{ maxLength: 11 }}
-                error={ !error.cpf.valid }
-                helperText={ error.cpf.text }
-                onChange={ (event) => {
-                    setCPF(event.target.value)
-                } }
-                onBlur={ (event) => {
-                    const valid = validarCPF(cpf)
-                    setError({cpf: valid})
-                } }
-                id="cpf"
-                label="CPF"
-                variant="outlined"
-                fullWidth
-                margin={ 'normal' }
-            />
-
-            <FormControlLabel
-                // checked={promotions}
-                control={
-                    <Switch
-                        onChange={ (event) => {
-                            setPromotions(event.target.checked)
-                        }
-                        }
-                        name="promotions"
-                        color="primary"
-                        checked={ promotions }
-                        // defaultChecked={ promotions }
-                    />
-                }
-                label="Promotions"
-            />
-
-
-            <FormControlLabel
-                control={
-                    <Switch
-                        onChange={ (event) => {
-                            setNews(event.target.checked)
-                        }
-                        }
-                        name="news"
-                        color="primary"
-                        checked={ news }
-                    />
-                }
-                label="News"
-            />
-
-
-            <Button
-                type={ 'submit' }
-                variant="contained"
-                color="primary"
-            > Register </Button>
-        </form>
+        <>
+            <Stepper activeStep={ CurrentStage }>
+                <Step> <StepLabel alternativeLabel> Login </StepLabel> </Step>
+                <Step> <StepLabel alternativeLabel> Pessoal </StepLabel> </Step>
+                <Step> <StepLabel alternativeLabel> Entrega </StepLabel> </Step>
+                <Step> <StepLabel alternativeLabel> Finish </StepLabel> </Step>
+            </Stepper>
+            { forms[CurrentStage] }
+        </>
     )
 }
 
